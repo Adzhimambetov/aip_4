@@ -24,21 +24,17 @@ router.get('/logreg', function (req, res, next) {
 router.post('/logreg', function (req, res, next) {
   var username = req.body.username
   var password = req.body.password
-  console.log(username, password)
   User.findOne({ username: username }, function (err, user) {
     if (err) return next(err)
     if (user) {
-      console.log(user)
       if (user.checkPassword(password)) {
         req.session.user = user._id
         res.redirect('/')
       } else {
         res.render('logreg', { error: "Пароль не верный" });
-
       }
     } else {
       var user = new User({ username: username, password: password })
-      console.log(user)
       user.save(function (err, user) {
         if (err) return next(err)
         req.session.user = user._id
@@ -47,10 +43,16 @@ router.post('/logreg', function (req, res, next) {
     }
   })
 });
-/ GET auth page. /
+
+/* GET auth page. */
 router.get('/logreg', function (req, res, next) {
   res.render('logreg', { error: "Пароль не верный" });
 });
 
+/* POST logout. */
+router.post('/logout', function (req, res, next) {
+  req.session.destroy()
+  res.redirect('/')
+});
 
 module.exports = router;
