@@ -8,7 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/all')
 var session = require("express-session")
 
@@ -32,6 +32,11 @@ app.use(session({
   cookie: { maxAge: 60 * 1000 },
   store: new MongoStore({ mongooseConnection: mongoose.connection })
 }))
+
+app.use(function (req, res, next) {
+  req.session.counter = req.session.counter + 1 || 1
+  next()
+})
 
 
 app.use('/', indexRouter);
