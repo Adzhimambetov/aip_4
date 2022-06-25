@@ -14,8 +14,8 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
-                <img src="public/images/b.png" alt="logo" width="30" height="24" class="d-inline-block align-text-top">
-                Football players
+                <img src="/images/logo.png" alt="logo" width="30" height="24" class="d-inline-block align-text-top">
+                Footbal players
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,11 +23,12 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav ms-auto">
-                    <% menu.forEach(function(hero){ %>
-                        <a class="nav-link" href="/heroes/<%=hero.nick%>">
-                            <%=hero.title%>
+                    <% if(typeof nav=='object' && nav){ nav.forEach(function(item){ %>
+                        <a class="nav-link" href="/heroes/<%= item.nick %>">
+                            <%= item.title %>
                         </a>
-                        <% }) %>
+                        <% })} %>
+                            <a class="nav-link" href="/logreg">Войти</a>
                 </div>
             </div>
         </div>
