@@ -1,46 +1,12 @@
 var mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/all')
 var Hero = require("./models/hero").Hero
-var async = require('async');
+var async = require("async")
+var data = require('./data.js').data
 
-function open(callback) {
-    mongoose.connection.on("open", callback)
-}
-
-function dropDatabase(callback) {
-    var db = mongoose.connection.db
-    db.dropDatabase(callback)
-}
-
-function createHeroes(callback) {
-    async.parallel([
-        function (callback) {
-            var pig = new Hero({ nick: "pig" })
-            pig.save(function (err, pig) {
-                callback(err, "pig")
-            })
-        },
-        function (callback) {
-            var vinni = new Hero({ nick: "vinni" })
-            vinni.save(function (err, vinni) {
-                callback(err, "vinni")
-            })
-        },
-        function (callback) {
-            var sova = new Hero({ nick: "sova" })
-            sova.save(function (err, sova) {
-                callback(err, "sova")
-            })
-        }
-    ],
-        function (err, result) {
-            callback(err)
-        })
-}
-
-function close(callback) {
-    mongoose.disconnect(callback)
-}
+// 1. Очистить базу данных all
+// 2. Вставить 5 героев
+// 3. Закрыть соединение с базой данных
 
 async.series([
     open,
@@ -52,3 +18,24 @@ async.series([
         if (err) throw err
         console.log("ok")
     })
+
+function open(callback) {
+    mongoose.connection.on("open", callback)
+}
+
+function dropDatabase(callback) {
+    var db = mongoose.connection.db
+    db.dropDatabase(callback)
+}
+
+function createHeroes(callback) {
+    async.each(data, function (heroData, callback) {
+        var hero = new mongoose.models.Hero(heroData)
+        hero.save(callback)
+    },
+        callback)
+}
+
+function close(callback) {
+    mongoose.disconnect(callback)
+}
