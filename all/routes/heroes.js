@@ -1,55 +1,36 @@
 var express = require('express')
 var router = express.Router()
 var Hero = require("../models/hero").Hero
-var User = require("../models/User").User
+var async = require("async")
+var checkAuth = require("./../middleware/checkAuth.js")
 
-/* GET home page. */
+/* GET users listing. */
 router.get('/', function (req, res, next) {
-    Hero.find({}, { _id: 0, title: 1, nick: 1 }, function (err, menu) {
-        req.session.greeting = "Hi!!!"
-        res.render('index', {
-            title: 'Express',
-            counter: req.session.counter
-        });
-    })
-
+    res.send('Новый маршрутизатор, для маошрутов, начинающихся с heroes')
 });
 
-/* GET login/registration page. */
-router.get('/logreg', function (req, res, next) {
-    res.render('logreg', { error: null });
-});
-
-/* POST login/registration page. */
-router.post('/logreg', function (req, res, next) {
-    var username = req.body.username
-    var password = req.body.password
-    User.findOne({ username: username }, function (err, user) {
-        if (err) return next(err)
-        if (user) {
-            if (user.checkPassword(password)) {
-                req.session.user = user._id
-                res.redirect('/')
-            } else {
-                res.render('logreg', { title: 'Вход' })
-            }
-        } else {
-            var user = new User({ username: username, password: password })
-            user.save(function (err, user) {
-                if (err) return next(err)
-                req.session.user = user._id
-                res.redirect('/')
-            })
+/* Страница героев */
+router.get('/:nick', checkAuth, function (req, res, next) {
+    async.parallel([
+        function (callback) {
+            Hero.findOne({ nick: req.params.nick }, callback)
+        },
+        function (callback) {
+            Hero.find({}, { _id: 0, title: 1, nick: 1 }, callback)
         }
-    })
-});
+    ],
+        function (err, result) {
+            if (err) return next(err)
+            var hero = result[0]
+            var heroes = result[1] || []
+            if (!hero) return next(new Error("Нет такого героя в этой книжке"))
+            res.render('hero', {
+                title: hero.title,
+                picture: '/' + hero.avatar,
+                desc: hero.desc,
+                // menu: heroes
+            });
+        })
+})
 
-/* GET auth page. */
-router.get('/logreg', function (req, res, next) {
-    res.render('logreg', { error: "Пароль не верный" });
-});
-
-
-
-
-module.exports = router;
+module.exports = router
