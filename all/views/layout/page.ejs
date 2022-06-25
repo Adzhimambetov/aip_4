@@ -2,9 +2,8 @@
 <html>
 
 <head>
-    <title>
-        <%= title %>
-    </title>
+    <title>Football players</title>
+    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link href="/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css">
     <script src="/jquery/dist/jquery.js"></script>
@@ -12,28 +11,25 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-sm bg-light navbar-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/">Меню</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/cristiano">Cristiano Ronaldo</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/messi">Messi</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/benzema">Benzema</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/neymar">Neymar</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/robert">Robert</a>
-                </li>
-            </ul>
+            <a class="navbar-brand" href="/">
+                <img src="public/images/b.png" alt="logo" width="30" height="24" class="d-inline-block align-text-top">
+                Football players
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav ms-auto">
+                    <% menu.forEach(function(hero){ %>
+                        <a class="nav-link" href="/heroes/<%=hero.nick%>">
+                            <%=hero.title%>
+                        </a>
+                        <% }) %>
+                </div>
+            </div>
         </div>
     </nav>
     <%- body %>
