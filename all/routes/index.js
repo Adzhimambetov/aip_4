@@ -24,9 +24,11 @@ router.get('/logreg', function (req, res, next) {
 router.post('/logreg', function (req, res, next) {
   var username = req.body.username
   var password = req.body.password
+  console.log(username, password)
   User.findOne({ username: username }, function (err, user) {
     if (err) return next(err)
     if (user) {
+      console.log(user)
       if (user.checkPassword(password)) {
         req.session.user = user._id
         res.redirect('/')
@@ -35,6 +37,7 @@ router.post('/logreg', function (req, res, next) {
       }
     } else {
       var user = new User({ username: username, password: password })
+      console.log(user)
       user.save(function (err, user) {
         if (err) return next(err)
         req.session.user = user._id
