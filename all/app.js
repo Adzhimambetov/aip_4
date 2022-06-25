@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var Hero = require("./models/hero").Hero
 
 var app = express();
 var mongoose = require('mongoose');
@@ -38,6 +39,17 @@ app.use(function (req, res, next) {
   next()
 })
 
+app.use(function (req, res, next) {
+  res.locals.nav = []
+
+  Hero.find(null, { _id: 0, title: 1, nick: 1 }, function (err, result) {
+    if (err) throw err
+    res.locals.nav = result
+    next()
+  })
+})
+
+app.use(require("./middleware/createMenu.js"))
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
