@@ -31,6 +31,7 @@ app.use(session({
   cookie: { maxAge: 60 * 1000 }
 }))
 
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/heroes', heroes);
